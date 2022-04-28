@@ -6,17 +6,22 @@ declare var google: any;
   templateUrl: './location.component.html'
 })
 export class LocationComponent {
-  position: {
+  marker_position: {
     latitude: 52.228973,
     longitude: 20.728218
   }
-  icon = {
-    url: "assets/pawicon.png",
-    // This marker is 20 pixels wide by 32 pixels high.
-    size: new google.maps.Size(20, 32),
-    // The origin for this image is (0, 0).
+  marker_icon = {
+    url: "https://i.ibb.co/NmvgBPB/pawicon.png",
+    size: new google.maps.Size(32, 32),
     origin: new google.maps.Point(0, 0),
-    // The anchor for this image is the base of the flagpole at (0, 32).
-    anchor: new google.maps.Point(0, 32),
+    anchor: new google.maps.Point(16, 16),
   };
+
+map_options = {
+  zoom: 14,
+  mapTypeId: google.maps.MapTypeId.ROADMAP,
+  streetViewControl: false,
+  disableDefaultUI: true
+};
+
 }

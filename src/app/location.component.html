@@ -1,7 +1,7 @@
 <div id="location">
   <h2>Ubicación</h2>
-  <google-map >
-    <map-marker [position]="position" [icon]="icon">
+  <google-map [options]="map_options">
+    <map-marker [position]="marker_position" [icon]="marker_icon">
     </map-marker>
   </google-map>
 </div>
