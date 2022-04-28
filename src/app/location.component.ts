@@ -17,11 +17,11 @@ export class LocationComponent {
     anchor: new google.maps.Point(16, 16),
   };
 
-map_options = {
-  zoom: 14,
-  mapTypeId: google.maps.MapTypeId.ROADMAP,
-  streetViewControl: false,
-  disableDefaultUI: true
-};
+  map_options = {
+    zoom: 14,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    streetViewControl: false,
+    disableDefaultUI: true
+  };
 
 }

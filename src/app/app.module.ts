@@ -8,10 +8,11 @@ import { HelloComponent } from './hello.component';
 import { NavbarComponent } from './navbar.component';
 import { ActivityComponent } from './activity.component';
 import { LocationComponent } from './location.component';
+import { RouteComponent } from './route.component';
 
 @NgModule({
   imports: [ BrowserModule, FormsModule, NgbModule, GoogleMapsModule],
-  declarations: [ AppComponent, HelloComponent, NavbarComponent, ActivityComponent, LocationComponent ],
+  declarations: [ AppComponent, HelloComponent, NavbarComponent, ActivityComponent, LocationComponent, RouteComponent ],
   bootstrap:    [ AppComponent ]
 })
 export class AppModule { }
