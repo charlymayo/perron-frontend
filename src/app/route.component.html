@@ -1,16 +1,19 @@
-<div id="route">
-<h2>Ruta</h2>
-<div class="row">
-  <div class="col-md-8">
-    <img  [src]="routeImgSrc"/>
-  </div>
-  <div class="col-md-4">
-    <label>Inicio</label>
-    <ngb-timepicker [(ngModel)]="startTime"></ngb-timepicker>
-    <label>Fin</label>
-    <ngb-timepicker [(ngModel)]="endTime"></ngb-timepicker>
-    <button type="button" class="btn btn-primary" (click)="getRoute()">Obtener</button>
+<div id="route" class=>
+  <h2>Ruta</h2>
+  <div class="row">
+    <div class="col-md-9">
+      <img  [src]="routeImgSrc"/>
+    </div>
+    <div class="col-md-3">
+      <div class="marginBottom15 marginTop15">
+        <label>Inicio</label>
+        <ngb-timepicker [(ngModel)]="startTime"></ngb-timepicker>
+      </div>
+      <div>
+        <label>Fin</label>
+        <ngb-timepicker [(ngModel)]="endTime"></ngb-timepicker>
+      </div>
+      <button type="button" class="btn btn-primary marginTop15" (click)="getRoute()">Obtener</button>
+    </div>
   </div>
 </div>
-</div>
-{{routeImgSrc}}

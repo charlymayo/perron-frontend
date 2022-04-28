@@ -1,0 +1,16 @@
+.parentDiv {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+::ng-deep .ngb-tp {
+  justify-content: center;
+}
+
+.marginTop15{
+  margin-top: 15px;
+}
+
+.marginBottom15{
+  margin-bottom: 15px;
+}

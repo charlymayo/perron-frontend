@@ -3,12 +3,13 @@ declare var google: any;
 
 @Component({
   selector: 'location',
-  templateUrl: './location.component.html'
+  templateUrl: './location.component.html',
+  styleUrls: [ './location.component.css' ]
 })
 export class LocationComponent {
-  marker_position: {
-    latitude: 52.228973,
-    longitude: 20.728218
+  marker_position = {
+    lat: 21.8743971,
+    lng: -102.2653314
   }
   marker_icon = {
     url: "https://i.ibb.co/NmvgBPB/pawicon.png",
@@ -18,9 +19,10 @@ export class LocationComponent {
   };
 
   map_options = {
-    zoom: 14,
+    zoom: 15,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     streetViewControl: false,
+    center: { lat: 21.8743971, lng: -102.2653314 },
     disableDefaultUI: true
   };
 

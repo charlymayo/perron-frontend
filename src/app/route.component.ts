@@ -3,7 +3,8 @@ declare var google: any;
 
 @Component({
   selector: 'route',
-  templateUrl: './route.component.html'
+  templateUrl: './route.component.html',
+  styleUrls: [ './route.component.css' ]
 })
 export class RouteComponent {
   routeUrlBase:string = "https://static-maps.yandex.ru/1.x/?lang=en_US&l=map&pl="; 
@@ -12,15 +13,20 @@ export class RouteComponent {
 
   getRoute()
   {
-    //here you can do work , 
-    //this get called when you press "click" button in table 
-    alert("holathis.title");
 
   }
 
-  positions = [{'latitude': '52.228973', 'longitude': '20.728218', 'time': '10:28'}, {'latitude': '53.228973', 'longitude': '20.728218', 'time': '7:00'}, {'latitude': '52.228973', 'longitude': '25.728218', 'time': '20:28'}, {'latitude': '52.228973', 'longitude': '19.728218', 'time': '22:30'}];
+  positions = [{'latitude': '21.870028', 'longitude': '-102.279372', 'time': '10:28'}, {'latitude': '21.850008', 'longitude': '-102.272362', 'time': '7:00'}, {'latitude': '21.880328', 'longitude': '-102.272572', 'time': '20:28'}, {'latitude': '21.873028', 'longitude': '-102.254372', 'time': '22:30'}];
 
-  routeImgSrc2 = this.routeUrlBase + this.positions[this.positions.length - 1].latitude + "," + this.positions[this.positions.length - 1].longitude;
   routeImgSrc = "";
-
+  constructor(){
+    if(this.routeImgSrc === ""){
+      this.routeImgSrc = this.routeUrlBase;
+    }
+    for (var position of this.positions) {
+      this.routeImgSrc += position.longitude + "," + position.latitude;
+      this.routeImgSrc += ",";
+    }
+    this.routeImgSrc = this.routeImgSrc.slice(0, -1);
+  }
 }
