@@ -1,1 +1,14 @@
-<div id="activity"></div>
+<div id="activity" class="parentDiv" (window:resize) = "resetWindowSize($event)">
+  <h2>Actividad</h2>
+  <h3>Distancia recorrida (kms)</h3>
+  <google-chart [type]="chart_type" [data]="dataArr" [options]="chart_options" ></google-chart>
+  <br>
+  <div class="btn-group" role="group" ngbRadioGroup name="radioBasic" [(ngModel)]="range">
+    <label ngbButtonLabel class="btn-primary">
+      <input ngbButton type="radio" class="btn-check" [value]="7" (click)="displayData(7)"> Semana
+    </label>
+    <label ngbButtonLabel class="btn-primary">
+      <input ngbButton type="radio" class="btn-check" (click)="displayData(30)" value="30"> Mes
+    </label>
+  </div>
+</div>

@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { GoogleMapsModule } from "@angular/google-maps";
+import { GoogleChartsModule } from 'angular-google-charts';
 import { AppComponent } from './app.component';
 import { HelloComponent } from './hello.component';
 import { NavbarComponent } from './navbar.component';
@@ -11,7 +12,7 @@ import { LocationComponent } from './location.component';
 import { RouteComponent } from './route.component';
 
 @NgModule({
-  imports: [ BrowserModule, FormsModule, NgbModule, GoogleMapsModule],
+  imports: [ BrowserModule, FormsModule, NgbModule, GoogleMapsModule, GoogleChartsModule],
   declarations: [ AppComponent, HelloComponent, NavbarComponent, ActivityComponent, LocationComponent, RouteComponent ],
   bootstrap:    [ AppComponent ]
 })
