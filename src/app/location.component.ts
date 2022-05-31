@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 declare var google: any;
 
 @Component({
@@ -7,6 +8,20 @@ declare var google: any;
   styleUrls: [ './location.component.css' ]
 })
 export class LocationComponent {
+  constructor(private httpClient: HttpClient) { 
+    this.requestCurrentLocation().subscribe(
+      res => {
+        console.log(res);
+      }
+  );
+  }
+  httpHeaders = { headers: new HttpHeaders({'Content-Type': 'application/json'})}  
+  url = "https://us-central1-iotequipo4tec.cloudfunctions.net/get_last_date-1";
+
+  requestCurrentLocation() {
+    return this.httpClient.post('https://us-central1-iotequipo4tec.cloudfunctions.net/get_last_date-1', {}, this.httpHeaders );
+  }
+
   marker_position = {
     lat: 21.8743971,
     lng: -102.2653314
