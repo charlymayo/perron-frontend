@@ -12,9 +12,13 @@ declare var google: any;
   styleUrls: [ './location.component.css' ]
 })
 export class LocationComponent implements OnDestroy {
+  subscription !: Subscription;
+  httpHeaders = { headers: new HttpHeaders({'Content-Type': 'application/json'})}  
+  url = "https://us-central1-iotequipo4tec.cloudfunctions.net/get_last_date-2";
+
   constructor(private httpClient: HttpClient) { 
     this.subscription = timer(0, 5000000).pipe(
-      switchMap(() => this.requestCurrentLocation())
+      switchMap(() => this.requestCurrentPosition())
     ).subscribe(result => {
       this.marker_position = {
         lat: parseFloat(result["positions"][0].latitude),
@@ -27,15 +31,10 @@ export class LocationComponent implements OnDestroy {
         center: { lat: parseFloat(result["positions"][0].latitude), lng: parseFloat(result["positions"][0].longitude) },
         disableDefaultUI: true
       };
-    }
-    );
+    });
   }
 
-  subscription !: Subscription;
-  httpHeaders = { headers: new HttpHeaders({'Content-Type': 'application/json'})}  
-  url = "https://us-central1-iotequipo4tec.cloudfunctions.net/get_last_date-2";
-
-  requestCurrentLocation() {
+  requestCurrentPosition() {
     return this.httpClient.post(this.url, {}, this.httpHeaders ).pipe(
       retry(1),
       catchError(this.httpError)
