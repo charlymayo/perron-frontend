@@ -1,5 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { retry, catchError } from 'rxjs/operators';
+import {Subscription, timer} from 'rxjs';  
+import { switchMap } from 'rxjs/operators';
 declare var google: any;
 
 @Component({
@@ -7,25 +11,53 @@ declare var google: any;
   templateUrl: './location.component.html',
   styleUrls: [ './location.component.css' ]
 })
-export class LocationComponent {
+export class LocationComponent implements OnDestroy {
   constructor(private httpClient: HttpClient) { 
-    this.requestCurrentLocation().subscribe(
-      res => {
-        console.log(res);
+    this.subscription = timer(0, 5000000).pipe(
+      switchMap(() => this.requestCurrentLocation())
+    ).subscribe(result => {
+      this.marker_position = {
+        lat: parseFloat(result["positions"][0].latitude),
+        lng: parseFloat(result["positions"][0].longitude)
       }
-  );
+      this.map_options = {
+        zoom: 15,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        streetViewControl: false,
+        center: { lat: parseFloat(result["positions"][0].latitude), lng: parseFloat(result["positions"][0].longitude) },
+        disableDefaultUI: true
+      };
+    }
+    );
   }
+
+  subscription !: Subscription;
   httpHeaders = { headers: new HttpHeaders({'Content-Type': 'application/json'})}  
-  url = "https://us-central1-iotequipo4tec.cloudfunctions.net/get_last_date-1";
+  url = "https://us-central1-iotequipo4tec.cloudfunctions.net/get_last_date-2";
 
   requestCurrentLocation() {
-    return this.httpClient.post('https://us-central1-iotequipo4tec.cloudfunctions.net/get_last_date-1', {}, this.httpHeaders );
+    return this.httpClient.post(this.url, {}, this.httpHeaders ).pipe(
+      retry(1),
+      catchError(this.httpError)
+    );
+  }
+
+  httpError(error) {
+    let msg = '';
+    if(error.error instanceof ErrorEvent) {
+      msg = error.error.message;
+    } else {
+      msg = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    console.log(msg);
+    return throwError(msg);
   }
 
   marker_position = {
     lat: 21.8743971,
     lng: -102.2653314
   }
+
   marker_icon = {
     url: "https://i.ibb.co/NmvgBPB/pawicon.png",
     size: new google.maps.Size(32, 32),
@@ -41,4 +73,7 @@ export class LocationComponent {
     disableDefaultUI: true
   };
 
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 }
