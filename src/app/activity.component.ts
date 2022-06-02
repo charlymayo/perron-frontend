@@ -1,9 +1,7 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
-import {Subscription, timer} from 'rxjs';  
-import { switchMap } from 'rxjs/operators';
 import { ChartType } from 'angular-google-charts';
 
 @Component({
@@ -103,8 +101,6 @@ export class ActivityComponent{
     var monthStr:string = (dateB.getMonth().toString().length == 1) ? "0" + (dateB.getMonth() + 1).toString() : (dateB.getMonth() + 1).toString();
     var dayStr:string = (dateB.getDate().toString().length == 1) ? "0" + dateB.getDate().toString() : dateB.getDate().toString(); 
     var endDate = yearStr + "-" + monthStr + "-" + dayStr + " 23:59:59";
-    console.log(startDate);
-    console.log(endDate);
     return this.httpClient.post(this.url, {"start_date": startDate, "end_date": endDate}, this.httpHeaders ).pipe(
       retry(1),
       catchError(this.httpError)

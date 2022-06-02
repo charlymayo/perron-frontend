@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
 import {Subscription, timer} from 'rxjs';  
 import { switchMap } from 'rxjs/operators';
