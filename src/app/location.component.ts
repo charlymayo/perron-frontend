@@ -17,7 +17,7 @@ export class LocationComponent implements OnDestroy {
   url = "https://us-central1-iotequipo4tec.cloudfunctions.net/get_last_date-2";
 
   constructor(private httpClient: HttpClient) { 
-    this.subscription = timer(0, 5000000).pipe(
+    this.subscription = timer(0, 1000).pipe(
       switchMap(() => this.requestCurrentPosition())
     ).subscribe(result => {
       this.marker_position = {
