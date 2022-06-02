@@ -1,4 +1,9 @@
-import {Component} from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { retry, catchError } from 'rxjs/operators';
+import {Subscription, timer} from 'rxjs';  
+import { switchMap } from 'rxjs/operators';
 import { ChartType } from 'angular-google-charts';
 
 @Component({
@@ -6,29 +11,9 @@ import { ChartType } from 'angular-google-charts';
   templateUrl: './activity.component.html',
   styleUrls: [ './activity.component.css' ]
 })
-export class ActivityComponent {
+export class ActivityComponent{
   width = document.documentElement.clientWidth;
-  positions = [{'latitude': '21.870028', 'longitude': '-102.279372', 'time': '10:28', 'date':'05/05/22'}, {'latitude': '21.850008', 'longitude': '-102.272362', 'time': '07:00', 'date':'04/05/22'}, {'latitude': '21.880328', 'longitude': '-102.272572', 'time': '20:28', 'date':'03/05/22'}, {'latitude': '21.873028', 'longitude': '-102.254372', 'time': '20:27', 'date':'02/05/22'},  {'latitude': '21.873028', 'longitude': '-102.254372', 'time': '20:27', 'date':'05/05/22'}, {'latitude': '21.873028', 'longitude': '-102.254372', 'time': '20:27', 'date':'04/05/22'}, {'latitude': '21.871028', 'longitude': '-102.214372', 'time': '20:27', 'date':'05/04/22'},{'latitude': '21.871048', 'longitude': '-102.214572', 'time': '15:22', 'date':'05/03/22'}, {'latitude': '21.871044', 'longitude': '-102.211572', 'time': '10:22', 'date':'05/03/22'},
-  {'latitude': '21.874048', 'longitude': '-102.224572', 'time': '15:22', 'date':'05/02/22'},
-  {'latitude': '21.874038', 'longitude': '-102.222572', 'time': '08:22', 'date':'05/02/22'},
-  {'latitude': '21.874048', 'longitude': '-102.224572', 'time': '15:22', 'date':'05/01/22'},
-  {'latitude': '21.874738', 'longitude': '-102.202572', 'time': '08:22', 'date':'05/01/22'},
-  {'latitude': '21.874048', 'longitude': '-102.224572', 'time': '15:22', 'date':'04/30/22'},
-  {'latitude': '21.874048', 'longitude': '-102.204572', 'time': '15:22', 'date':'04/30/22'},
-  {'latitude': '21.872048', 'longitude': '-102.244572', 'time': '15:22', 'date':'04/29/22'},
-  {'latitude': '21.874738', 'longitude': '-102.232572', 'time': '08:22', 'date':'04/29/22'},
-  {'latitude': '21.872048', 'longitude': '-102.244572', 'time': '15:22', 'date':'04/28/22'},
-  {'latitude': '21.874738', 'longitude': '-102.232572', 'time': '08:22', 'date':'04/28/22'},
-  {'latitude': '21.832048', 'longitude': '-102.243572', 'time': '15:22', 'date':'04/27/22'},
-  {'latitude': '21.844738', 'longitude': '-102.234572', 'time': '08:22', 'date':'04/27/22'},
-  {'latitude': '21.830048', 'longitude': '-102.241572', 'time': '15:22', 'date':'04/26/22'},
-  {'latitude': '21.841738', 'longitude': '-102.231572', 'time': '08:22', 'date':'04/26/22'},
-  {'latitude': '21.830048', 'longitude': '-102.241572', 'time': '15:22', 'date':'04/25/22'},
-  {'latitude': '21.841798', 'longitude': '-102.231512', 'time': '08:22', 'date':'04/25/22'},
-  {'latitude': '21.830048', 'longitude': '-102.241172', 'time': '15:22', 'date':'04/24/22'},
-  {'latitude': '21.846798', 'longitude': '-102.231512', 'time': '08:22', 'date':'04/24/22'},
-  {'latitude': '21.830048', 'longitude': '-102.249172', 'time': '15:22', 'date':'04/23/22'},
-  {'latitude': '21.846098', 'longitude': '-102.231512', 'time': '08:22', 'date':'04/23/22'}, {'latitude': '21.846098', 'longitude': '-102.231512', 'time': '08:22', 'date':'05/04/22'}, {'latitude': '21.846098', 'longitude': '-102.231512', 'time': '08:22', 'date':'05/06/22'}, {'latitude': '21.846118', 'longitude': '-102.221512', 'time': '08:12', 'date':'05/06/22'}];
+  positions = [{'latitude': '21.870028', 'longitude': '-102.279372', 'time': '10:28', 'date':'05/05/22'}];
   filteredPositions = this.positions;
   range:Number = 7;
   dataObj = {};
@@ -39,6 +24,8 @@ export class ActivityComponent {
     colors: ['#5cb85c'],
     legend: { position: 'none' }
   };
+  httpHeaders = { headers: new HttpHeaders({'Content-Type': 'application/json'})}  
+  url = "https://us-central1-iotequipo4tec.cloudfunctions.net/get_last_date-2";
 
   filterPositions(range){
     this.positions.sort(function (a, b) {
@@ -101,9 +88,44 @@ export class ActivityComponent {
       colors: ['#5cb85c'],
       legend: { position: 'none' }
     };
-}
+  }
 
-  constructor(){
-    this.displayData(this.range);
+  requestPositions() {
+    var dateA = new Date();
+    var dateB = new Date();
+    dateA.setDate(dateB.getDate() - 30);
+    var yearStr = dateA.getFullYear();
+    var monthStr:string = (dateA.getMonth().toString().length == 1) ? "0" + (dateA.getMonth() + 1).toString() : (dateA.getMonth() + 1).toString();
+    var dayStr:string = (dateA.getDate().toString().length == 1) ? "0" + dateA.getDate().toString() : dateA.getDate().toString(); 
+    var startDate = yearStr + "-" + monthStr + "-" + dayStr + " 00:00:00";
+
+    var yearStr = dateB.getFullYear();
+    var monthStr:string = (dateB.getMonth().toString().length == 1) ? "0" + (dateB.getMonth() + 1).toString() : (dateB.getMonth() + 1).toString();
+    var dayStr:string = (dateB.getDate().toString().length == 1) ? "0" + dateB.getDate().toString() : dateB.getDate().toString(); 
+    var endDate = yearStr + "-" + monthStr + "-" + dayStr + " 23:59:59";
+    console.log(startDate);
+    console.log(endDate);
+    return this.httpClient.post(this.url, {"start_date": startDate, "end_date": endDate}, this.httpHeaders ).pipe(
+      retry(1),
+      catchError(this.httpError)
+    );
+  }
+
+  constructor(private httpClient: HttpClient) { 
+    this.requestPositions().subscribe(result => {
+      this.positions = result["positions"];
+      this.displayData(this.range);
+    });
+  }
+
+  httpError(error) {
+    let msg = '';
+    if(error.error instanceof ErrorEvent) {
+      msg = error.error.message;
+    } else {
+      msg = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    console.log(msg);
+    return throwError(msg);
   }
 }

@@ -10,7 +10,7 @@ import { switchMap } from 'rxjs/operators';
   templateUrl: './route.component.html',
   styleUrls: [ './route.component.css' ]
 })
-export class RouteComponent {
+export class RouteComponent implements OnDestroy{
   routeUrlBase:string = "https://static-maps.yandex.ru/1.x/?lang=en_US&l=map&pl="; 
   startTime = {hour: 0, minute: 0};
   endTime = {hour: 23, minute: 59};
