@@ -53,6 +53,7 @@ export class RouteComponent{
   constructor(private httpClient: HttpClient) { 
     this.requestTodaysPositions().subscribe(result => {
       this.positions = result["positions"];
+      this.filteredPositions = this.positions;
       this.getRoute();
     });
     
